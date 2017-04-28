@@ -5,6 +5,9 @@ In order to complete a test for Modus Create, I have created an API that uses NH
 This application was created using Laravel 5.4 PHP Framework for development of the API and [GuzzleHTTP](http://docs.guzzlephp.org/en/latest/)
 to make the necessaries requests for the NHTSA API and handle the responses.
 
+## Requirements
+- I recommend to use PHP 7.0.9 which was the one used during the development of this API
+
 ## Installation
 
 - Use Git to clone this project
