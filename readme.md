@@ -1,51 +1,110 @@
-<p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
+## About The Application
 
-<p align="center">
-<a href="https://travis-ci.org/laravel/framework"><img src="https://travis-ci.org/laravel/framework.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://poser.pugx.org/laravel/framework/license.svg" alt="License"></a>
-</p>
+In order to complete a test for Modus Create, I have created an API that uses NHTSA API to get vehicle crash ratings information.
 
-## About Laravel
+This application was created using Laravel 5.4 PHP Framework for development of the API and [GuzzleHTTP](http://docs.guzzlephp.org/en/latest/)
+to make the necessaries requests for the NHTSA API and handle the responses.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable, creative experience to be truly fulfilling. Laravel attempts to take the pain out of development by easing common tasks used in the majority of web projects, such as:
+## Installation
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Use Git to clone this project
+- It is not necessary to configure any environment variable 
+- Run composer to install the dependencies
+```terminal
+composer install
+```
+- As the application was made over Laravel 5.4 PHP Framework, start the web server running:
+```terminal
+php artisan serve
+```
+- Installation is done
 
-Laravel is accessible, yet powerful, providing tools needed for large, robust applications. A superb combination of simplicity, elegance, and innovation give you tools you need to build any application with which you are tasked.
+## Usage
 
-## Learning Laravel
+Once the installation is done, you are ready to start running the application. I recommend to use Postman Chrome plugin
+or any other tool to make HTTP requests:
 
-Laravel has the most extensive and thorough documentation and video tutorial library of any modern web application framework. The [Laravel documentation](https://laravel.com/docs) is thorough, complete, and makes it a breeze to get started learning the framework.
+#### Get vehicles using GET method
 
-If you're not in the mood to read, [Laracasts](https://laracasts.com) contains over 900 video tutorials on a range of topics including Laravel, modern PHP, unit testing, JavaScript, and more. Boost the skill level of yourself and your entire team by digging into our comprehensive video library.
+```
+GET http://localhost:8000/api/vehicles/<ModelYear>/<Manufacturer>/<Model>
+```
+For example
+```
+GET http://localhost:8000/api/vehicles/2015/Audi/A3
+```
+Should return
+```
+{
+  "Count": 4,
+  "Results": [
+    {
+      "Description": "2015 Audi A3 4 DR AWD",
+      "VehicleId": 9403
+    },
+    {
+      "Description": "2015 Audi A3 4 DR FWD",
+      "VehicleId": 9408
+    },
+    {
+      "Description": "2015 Audi A3 C AWD",
+      "VehicleId": 9405
+    },
+    {
+      "Description": "2015 Audi A3 C FWD",
+      "VehicleId": 9406
+    }
+  ]
+}
+```
 
-## Laravel Sponsors
+To get the Crash Rating value, you can add withRating=true to the URL:
+```
+http://localhost:8000/api/vehicles/2015/Audi/A3?withRating=true
+```
+Should return
+```
+{
+  "Count": 4,
+  "Results": [
+    {
+      "CrashRating": "5",
+      "Description": "2015 Audi A3 4 DR AWD",
+      "VehicleId": 9403
+    },
+    {
+      "CrashRating": "5",
+      "Description": "2015 Audi A3 4 DR FWD",
+      "VehicleId": 9408
+    },
+    {
+      "CrashRating": "Not Rated",
+      "Description": "2015 Audi A3 C AWD",
+      "VehicleId": 9405
+    },
+    {
+      "CrashRating": "Not Rated",
+      "Description": "2015 Audi A3 C FWD",
+      "VehicleId": 9406
+    }
+  ]
+}
+```
 
-We would like to extend our thanks to the following sponsors for helping fund on-going Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](http://patreon.com/taylorotwell):
+#### Get vehicles using POST method
 
-- **[Vehikl](http://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[British Software Development](https://www.britishsoftware.co)**
-- **[Styde](https://styde.net)**
-- **[Codecourse](https://www.codecourse.com)**
-- [Fragrantica](https://www.fragrantica.com)
+Alternatively, vehicles can be returned through POST method, setting the following parameters
+- modelYear
+- manufacturer
+- model
 
-## Contributing
-
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](http://laravel.com/docs/contributions).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell at taylor@laravel.com. All security vulnerabilities will be promptly addressed.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+For example:
+```
+POST http://localhost:8000/api/vehicles
+{
+    "modelYear": 2015,
+    "manufacturer": "Audi",
+    "model": "A3"
+}
+```
+Should return exactly same result as GET method
